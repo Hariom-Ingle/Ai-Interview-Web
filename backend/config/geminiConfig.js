@@ -1,9 +1,9 @@
 // config/geminiConfig.js
-import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
-
-// const apiKey = process.env.NODE_GEMINI_API_KEY;
-const apiKey ='AIzaSyBCjIbRRBz3ygEULwfHdO5hQc7TcvMds28';
-
+import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from '@google/generative-ai';
+import dotenv from 'dotenv';
+dotenv.config();
+const apiKey = process.env.NODE_GEMINI_API_KEY;
+ 
 if (!apiKey) {
     console.error("Critical Error: NODE_GEMINI_API_KEY is not set.");
     process.exit(1);

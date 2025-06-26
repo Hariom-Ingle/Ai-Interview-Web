@@ -93,7 +93,7 @@ function Header() {
                                 </DropdownMenuTrigger>
 
                                 <DropdownMenuContent className="w-48" align="end" forceMount>
-                                    <DropdownMenuLabel>{userNameDisplay}</DropdownMenuLabel>
+                                    <DropdownMenuLabel>👋  {userNameDisplay}</DropdownMenuLabel>
                                     <DropdownMenuSeparator />
 
                                     {!isUserVerified && (

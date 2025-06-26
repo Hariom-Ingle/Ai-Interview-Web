@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '@/utils';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '@/features/auth/authSlice';
@@ -36,9 +36,9 @@ export default function Login() {
   useEffect(() => {
     if (token) {
       handleSuccess('Login successful!');
-      navigate('/dashboard'); // Or your desired route
+      navigate('/'); // Or your desired route
     }
-  }, [token, navigate]);
+  }, [token, navigate]); 
 
   useEffect(() => {
     if (error) {
@@ -101,7 +101,9 @@ export default function Login() {
             >
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
+
           </div>
+          <NavLink to="/reset-password" className="text-blue-600 font-normal text-sm">forgot password</NavLink>
         </div>
 
         {/* Submit Button */}

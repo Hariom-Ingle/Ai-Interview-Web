@@ -1,106 +1,39 @@
-import User from '../models/userModel.js';
-import generateToken from '../utils/generateToken.js';
+import User from "../models/userModel.js";
 
- 
-// Helper functions for validation
-const isValidEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
-
-const isValidPassword = (password) => {
-  return password.length >= 6;
-};
-// ********************************************* Register Function *******************************************************
-
-export const registerUser = async (req, res) => {
+export const getUserData = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const userId = req.userId;
 
-    if (!email || !password || !name) {
-      return res.status(400).json({ success: false,message: 'All fields are required' });
-    }
-
-    if (!isValidEmail(email)) {
-      return res.status(400).json({ success: false,message: 'Invalid email format' });
-    }
-
-    if (!isValidPassword(password)) {
-      return res.status(400).json({ success: false,message: 'Password must be at least 6 characters long' });
-    }
-
-    const userExists = await User.findOne({ email });
-
-    if (userExists) {
-      return res.status(400).json({ success: false,message: 'User already exists' });
-    }
-
-    const user = await User.create({ name, email, password, });
-
-    if (user) {
-      generateToken(res, user._id);
-      return res.status(201).json({
-        success: true,message:"Signup Successfully !"
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required",
       });
-    } else {
-      return res.status(400).json({ message: 'Invalid user data' });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
-  }
-};
-// ********************************************* Login Function *******************************************************
-export const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ success: false, message: 'Please provide email and password' });
     }
 
-    if (!isValidEmail(email)) {
-      return res.status(400).json({ success: false, message: 'Invalid email format' });
+    const user = await User.findById(userId).select('-password'); // Exclude password
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
     }
 
-    if (!isValidPassword(password)) {
-      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long' });
-    }
-
-    const user = await User.findOne({ email });
-
-    if (user && (await user.matchPassword(password))) {
-      const token =generateToken(res, user._id);
-      // console.log(token);
-      return res.json({
-       
-        token,
-        _id: user._id,
+    res.json({
+      userData: {
         name: user.name,
-        email: user.email,
-        success: true,
-        message:"Logged in Sucessfully"
-      });
-    } else {
-      return res.status(401).json({ success: false, message: 'Invalid email or password' });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({success: false, message: 'Server Error' });
-  }
-};
+        id : user._id,
+        isAccountVerified: user.isAccountVerified
+      },
+      success: true,
+    })
 
-// ********************************************* GetUser Function *******************************************************
 
- 
-export const getUsers = async (req, res) => {
-  try {
-    const users = await User.find({});
-    res.json(users);
-    console.log( "--------- req user -----------")
-    console.log(req.user)
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to fetch users' });
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };

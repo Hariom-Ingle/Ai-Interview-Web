@@ -1,12 +1,54 @@
+// src/App.js
+
+import React, { useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
- import AppRoutes from "./routes/Approuts";
+import AppRoutes from "./routes/Approuts"; // Your routes definition
+import { useDispatch, useSelector } from "react-redux";
+import { getUserProfile, setInitialAuthCheckComplete } from "./features/auth/authSlice"; // Import the thunk and action
+import { ToastContainer } from "react-toastify"; // For toast notifications
+import "react-toastify/dist/ReactToastify.css"; // Styles for react-toastify
 
 function App() {
-  return (
-    <Router>
-      <AppRoutes />
-    </Router>
-  );
+    const dispatch = useDispatch();
+    const { initialAuthCheckComplete, loading } = useSelector((state) => state.auth);
+
+    useEffect(() => {
+        // This effect runs only once when the App component mounts
+        // to initiate the authentication check.
+        if (initialAuthCheckComplete) {
+            dispatch(getUserProfile()); // Attempt to fetch user profile
+            // The `setInitialAuthCheckComplete` action is dispatched by the thunk
+            // in its fulfilled/rejected states to mark the check as done.
+        }
+    }, [dispatch, initialAuthCheckComplete]); // Dependencies for the effect
+
+    // Render a loading state until the initial authentication check is complete
+    // if (!initialAuthCheckComplete || loading) {
+    //     return (
+    //         <div className="flex justify-center items-center min-h-screen bg-blue-50 text-blue-700 text-xl font-semibold">
+    //             Loading Application...
+    //         </div>
+    //     );
+    // }
+
+    // Render the main application content once the auth check is complete
+    return (
+        <Router>
+            <AppRoutes />
+            {/* ToastContainer for global notifications */}
+            <ToastContainer
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
+        </Router>
+    );
 }
 
 export default App;

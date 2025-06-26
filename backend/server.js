@@ -1,12 +1,13 @@
 // Starting with the entry point: server.js
-
-import express from 'express';
-import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-import cors from 'cors'
+import cors from 'cors';
+import dotenv from 'dotenv';
+import express from 'express';
 import connectDB from './config/db.js';
+import { errorHandler, notFound } from './middleware/errorMiddleware.js';
+import authRoutes from './routes/authRoutes.js';
+import interviewRoutes from './routes/interviewRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 
 // Load environment variables from .env
@@ -23,7 +24,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 // Routes
-app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
+// app.use('/api/user', userRoutes);
+app.use('/api/users',userRoutes)
+app.use('/api/interview', interviewRoutes);
+
 
 // Error Handling Middleware
 app.use(notFound);

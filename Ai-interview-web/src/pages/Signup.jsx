@@ -38,7 +38,7 @@ export default function Signup() {
       .then((res) => {
         handleSuccess(res.message || 'Signup successful');
         setSignupInfo({ name: '', email: '', password: '' });
-        setTimeout(() => navigate('/login'), 1500);
+        setTimeout(() => navigate('/verify-email'), 1500);
       })
       .catch((errMsg) => {
         handleError(errMsg);

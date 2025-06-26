@@ -1,11 +1,10 @@
 // store.js
 import { configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // localStorage
 import { combineReducers } from 'redux';
+import { persistReducer, persistStore } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'; // localStorage
  
-import authReducer from '../features/auth/authSlice'
-
+import authReducer from '../features/auth/authSlice';
 const persistConfig = {
   key: 'root',
   storage,
@@ -13,6 +12,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  
+  // interviewFlow: interviewFlowReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

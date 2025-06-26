@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000/api/users', // Change as per your backend
+  baseURL: 'http://localhost:5000/api/auth', // Change as per your backend
   headers: {
     'Content-Type': 'application/json',
   },

@@ -1,6 +1,9 @@
 import transporter from '../config/nodemailer.js';
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
+import dotenv from 'dotenv'
+
+dotenv.config()
 // Helper functions for validation
 const isValidEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -10,6 +13,8 @@ const isValidEmail = (email) => {
 const isValidPassword = (password) => {
   return password.length >= 6;
 };
+
+
 // ********************************************* Register Function *******************************************************
 
 export const registerUser = async (req, res) => {
@@ -80,8 +85,7 @@ export const loginUser = async (req, res) => {
     if (user && (await user.matchPassword(password))) {
       const token = generateToken(res, user._id);
       // console.log(token);
-      return res.json({
-        token,
+      return res.json({      
         _id: user._id,
         name: user.name,
         email: user.email,
@@ -102,15 +106,20 @@ export const loginUser = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     // Clear the JWT cookie
+
+    console.log("1", process.env.NODE_ENV === 'production')
+    console.log("2", process.env.NODE_ENV === 'production' ? 'none' : 'Strict')
+
     res.clearCookie('jwt', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'Strict',
+      path: '/', // ✅ ensure path is consistent
     });
 
     res.status(200).json({ message: 'Logout successful' });
   } catch (error) {
-    console.error('Logout error:', error); 
+    console.error('Logout error:', error);
     res.status(500).json({ message: 'Logout failed' });
   }
 };
@@ -122,8 +131,8 @@ export const logout = async (req, res) => {
 export const sendVerifyOtp = async (req, res) => {
   console.log('req.body:', req.userId); // 🔍 Debug log
 
-   const userId = req.userId;
-   console.log("api hit")
+  const userId = req.userId;
+  console.log("api hit")
 
   try {
     const user = await User.findById(userId); //
@@ -155,6 +164,7 @@ export const sendVerifyOtp = async (req, res) => {
     })
 
   } catch (error) {
+
     console.log(error);
   }
 
@@ -240,7 +250,7 @@ export const isAuthticated = async (req, res) => {
 //   
 // ********************************************* RESET PASSWORD Function *******************************************************
 
- 
+
 export const resetPassword = async (req, res) => {
   const { email, newPassword } = req.body;
   console.log(email, newPassword);
@@ -260,8 +270,8 @@ export const resetPassword = async (req, res) => {
         success: false,
         message: "User not found"
       });
-    }   
-   
+    }
+
 
     // Hash the new password
     // const salt = await bcrypt.genSalt(10);
@@ -269,7 +279,7 @@ export const resetPassword = async (req, res) => {
 
     // Update the user details
     user.password = newPassword;
-     
+
 
     // Save changes to the database
     await user.save();
@@ -288,11 +298,15 @@ export const resetPassword = async (req, res) => {
   }
 };
 
+
+//   Verify reset otp controller function 
+
+
 export const verifyResetOTP = async (req, res) => {
   const { email, otp } = req.body;
   console.log(email, otp);
 
-  
+
   try {
     const user = await User.findOne({ email });
 
@@ -317,7 +331,7 @@ export const verifyResetOTP = async (req, res) => {
       });
     }
 
-   
+
     user.resetOtp = '';
     user.resetOtpExpireAt = 0;
 
@@ -348,21 +362,21 @@ export const sendResetyOTP = async (req, res) => {
 
   const { email } = req.body;
 
-  if(!email){
+  if (!email) {
     return res.json({
-      success:false, message:"Please provide email"
+      success: false, message: "Please provide email"
     })
   }
   try {
 
-    const user= await  User.findOne({email});
+    const user = await User.findOne({ email });
 
-    if( !user){
-       return res.json({
-      success:false, message:"User not found"
-    })
+    if (!user) {
+      return res.json({
+        success: false, message: "User not found"
+      })
     }
-       
+
 
     const otp = String(Math.floor(100000 + Math.random() * 900000))
     user.resetOtp = otp;

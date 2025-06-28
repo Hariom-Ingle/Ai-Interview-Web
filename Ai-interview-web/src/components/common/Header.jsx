@@ -1,10 +1,16 @@
-import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { logoutUser } from "@/features/auth/authSlice";
+import { toggleTheme } from "@/features/theme/themeSlice";  
+import { handleError, handleSuccess } from "@/utils";
+import { ArrowRight, Menu, Moon, Sun, X } from "lucide-react";  
 import { useState } from "react";
-import { Menu, X, ArrowRight } from "lucide-react";
-import { useSelector, useDispatch } from "react-redux";
-import { logoutUser } from "@/features/auth/authSlice"; // Correct import
-import { handleError, handleSuccess } from "@/utils"; // Assuming your utility functions are here
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "../ui/avatar";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,20 +18,15 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "../ui/dropdown-menu"
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "../ui/avatar"
-// Removed unused imports from @radix-ui/react-select
+} from "../ui/dropdown-menu";
 
 function Header() {
     const [menuOpen, setMenuOpen] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { isAuthenticated, user, loading } = useSelector((state) => state.auth);
+    const { isAuthenticated, user } = useSelector((state) => state.auth);
+    const currentTheme = useSelector((state) => state.theme.theme); // NEW: Get current theme
     const isSignedIn = isAuthenticated;
 
     const handleLogout = async () => {
@@ -41,8 +42,13 @@ function Header() {
         }
     };
 
+    const handleThemeToggle = () => { // NEW: Theme toggle handler
+        dispatch(toggleTheme());
+    };
+
     const navLinks = [
         { name: "Dashboard", path: "/dashboard", protected: true },
+        { name: "Interview", path: "/interbviewerdashboard", protected: true },
         { name: "About", path: "/about" },
         { name: "Upgrade", path: "/upgrade", protected: true },
         { name: "How it Works", path: "/howitwork" },
@@ -52,12 +58,23 @@ function Header() {
     const userNameDisplay = user && user.name ? `Hi ${user.name.split(' ')[0]}` : 'Hi User';
     const isUserVerified = user && user.isAccountVerified;
 
+    // Determine header background based on theme
+    const headerClasses = `
+        px-4 py-3 sticky top-0 z-50 transition-colors duration-300
+        ${currentTheme === 'dark' ? 'bg-gray-800 shadow-lg' : 'bg-white shadow-md'}
+    `;
+
+    // Determine text color based on theme for NavLinks etc.
+    const textColorClasses = currentTheme === 'dark' ? 'text-gray-200' : 'text-gray-700';
+    const hoverTextColorClasses = currentTheme === 'dark' ? 'hover:text-blue-400' : 'hover:text-blue-600';
+
+
     return (
-        <header className="bg-white shadow-md px-4 py-3 sticky top-0 z-50">
+        <header className={headerClasses}>
             <div className="max-w-7xl mx-auto flex items-center justify-between">
                 {/* Logo */}
                 <div className="text-xl font-bold text-blue-600">
-                    <NavLink to="/">PrepMind</NavLink>
+                    <NavLink to="/">PrepAi</NavLink>
                 </div>
 
                 {/* Nav links (Desktop) */}
@@ -68,7 +85,8 @@ function Header() {
                                 key={link.name}
                                 to={link.path}
                                 className={({ isActive }) =>
-                                    `text-sm font-medium hover:text-blue-600 ${isActive ? "text-blue-600 underline underline-offset-4" : "text-gray-700"
+                                    `text-sm font-medium ${hoverTextColorClasses} ${
+                                        isActive ? "text-blue-600 dark:text-blue-400 underline underline-offset-4" : textColorClasses
                                     }`
                                 }
                             >
@@ -78,8 +96,18 @@ function Header() {
                     ))}
                 </nav>
 
-                {/* Auth buttons (Desktop) */}
+                {/* Auth buttons & Theme Toggle (Desktop) */}
                 <div className="hidden md:flex items-center gap-3">
+                    {/* NEW: Theme Toggle Button */}
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleThemeToggle}
+                        className="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                        {currentTheme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+                    </Button>
+
                     {isSignedIn ? (
                         <>
                             <DropdownMenu>
@@ -87,28 +115,29 @@ function Header() {
                                     <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                                         <Avatar>
                                             <AvatarImage src={user?.avatar || ""} alt={user?.name || "User"} />
-                                            <AvatarFallback className="bg-blue-200 text-blue-800 font-medium">{userInitial}</AvatarFallback>
+                                            <AvatarFallback className="bg-blue-200 text-blue-800 font-medium">
+                                                {userInitial}
+                                            </AvatarFallback>
                                         </Avatar>
                                     </Button>
                                 </DropdownMenuTrigger>
 
-                                <DropdownMenuContent className="w-48" align="end" forceMount>
-                                    <DropdownMenuLabel>👋  {userNameDisplay}</DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
+                                <DropdownMenuContent className="w-48 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600" align="end" forceMount>
+                                    <DropdownMenuLabel className="text-blue-800 dark:text-blue-300">👋 {userNameDisplay}</DropdownMenuLabel>
+                                    <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-600" />
 
                                     {!isUserVerified && (
                                         <DropdownMenuItem asChild>
-                                            {/* Fix: NavLink is the direct child of DropdownMenuItem with asChild */}
                                             <NavLink to="/verify-email" onClick={() => setMenuOpen(false)} className="w-full">
-                                                <Button variant="ghost" className="w-full justify-start text-blue-800 p-0 h-auto">Verify Account</Button>
+                                                <Button variant="ghost" className="w-full justify-start text-blue-800 dark:text-blue-300 p-0 h-auto hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    Verify Account
+                                                </Button>
                                             </NavLink>
                                         </DropdownMenuItem>
                                     )}
 
-                                    {/* Fix: Attach onClick directly to DropdownMenuItem for "Sign Out" */}
-                                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
-                                        {/* Content directly inside DropdownMenuItem */}
-                                        <span className="flex items-center w-full justify-start text-red-600">
+                                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                        <span className="flex items-center w-full justify-start">
                                             Sign Out <ArrowRight className="ml-auto h-4 w-4" />
                                         </span>
                                     </DropdownMenuItem>
@@ -118,10 +147,14 @@ function Header() {
                     ) : (
                         <>
                             <NavLink to="/login">
-                                <Button variant="outline">Login</Button>
+                                <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-300 dark:text-blue-300 dark:hover:bg-gray-700">
+                                    Login
+                                </Button>
                             </NavLink>
                             <NavLink to="/register">
-                                <Button>Sign Up</Button>
+                                <Button className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800">
+                                    Sign Up
+                                </Button>
                             </NavLink>
                         </>
                     )}
@@ -129,7 +162,7 @@ function Header() {
 
                 {/* Mobile menu toggle */}
                 <button
-                    className="md:hidden text-gray-700"
+                    className="md:hidden text-gray-700 dark:text-gray-200"
                     onClick={() => setMenuOpen(!menuOpen)}
                 >
                     {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -138,7 +171,19 @@ function Header() {
 
             {/* Mobile Menu */}
             {menuOpen && (
-                <div className="md:hidden mt-3 space-y-2 pb-4 border-t border-gray-100">
+                <div className="md:hidden mt-3 space-y-2 pb-4 border-t border-gray-100 dark:border-gray-700">
+                     {/* NEW: Theme Toggle Button for mobile */}
+                    <div className="flex justify-start px-4 pt-3">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={handleThemeToggle}
+                            className="text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                            {currentTheme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+                        </Button>
+                    </div>
+
                     <nav className="flex flex-col items-start gap-3 px-4 pt-3">
                         {navLinks.map((link) => (
                             (link.protected && !isSignedIn) ? null : (
@@ -146,7 +191,8 @@ function Header() {
                                     key={link.name}
                                     to={link.path}
                                     className={({ isActive }) =>
-                                        `text-base font-medium hover:text-blue-600 ${isActive ? "text-blue-600 underline" : "text-gray-700"
+                                        `text-base font-medium ${hoverTextColorClasses} ${
+                                            isActive ? "text-blue-600 dark:text-blue-400 underline" : textColorClasses
                                         }`
                                     }
                                     onClick={() => setMenuOpen(false)}
@@ -157,25 +203,25 @@ function Header() {
                         ))}
                     </nav>
 
-                    <div className="flex flex-col gap-2 px-4 pt-4 border-t border-gray-100">
+                    <div className="flex flex-col gap-2 px-4 pt-4 border-t border-gray-100 dark:border-gray-700">
                         {isSignedIn ? (
                             <>
                                 {!isUserVerified && (
                                     <NavLink to="/verify-email" onClick={() => setMenuOpen(false)}>
-                                        <Button variant="outline" className="w-full border-blue-600 text-blue-600">Verify Account</Button>
+                                        <Button variant="outline" className="w-full border-blue-600 text-blue-600 dark:border-blue-300 dark:text-blue-300">Verify Account</Button>
                                     </NavLink>
                                 )}
-                                <Button variant="destructive" className="w-full" onClick={handleLogout}>Sign Out</Button>
+                                <Button variant="destructive" className="w-full bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800" onClick={handleLogout}>Sign Out</Button>
                             </>
                         ) : (
                             <>
                                 <NavLink to="/login" onClick={() => setMenuOpen(false)}>
-                                    <Button variant="outline" className="w-full">
+                                    <Button variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-300 dark:text-blue-300 dark:hover:bg-gray-700">
                                         Login
                                     </Button>
                                 </NavLink>
                                 <NavLink to="/register" onClick={() => setMenuOpen(false)}>
-                                    <Button className="w-full">Sign Up</Button>
+                                    <Button className="w-full bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800">Sign Up</Button>
                                 </NavLink>
                             </>
                         )}

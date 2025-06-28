@@ -11,10 +11,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '@/utils';
 import { verifyEmail } from '../features/auth/authSlice';
-
+import axios from 'axios';
 function VerifyEmail() {
   const [otp, setOtp] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
+  const [otpSent, setOtpSent] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -27,40 +27,36 @@ function VerifyEmail() {
     if (successMessage) handleSuccess(successMessage);
   }, [error, successMessage]);
 
-  const handleInitialSendOtp = async () => {
-    if (!token) {
-      handleError('Token not found. Please login again.');
-      return;
-    }
-
-    try {
-      const response = await fetch('http://localhost:5000/api/auth/send-verify-otp', {
-        method: 'POST',
+ 
+const handleInitialSendOtp = async () => {
+  try {
+    const response = await axios.post(
+      'http://localhost:5000/api/auth/send-verify-otp',
+      {}, // No body required, adjust if needed
+      {
+        withCredentials: true, // 🔑 Send cookies (like JWT from HTTP-only cookie)
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        handleSuccess(data.message || 'OTP sent to your email.');
-        setOtpSent(true); // Show OTP input after sending
-      } else {
-        handleError(data.message || 'Failed to send OTP.');
       }
-    } catch (err) {
-      console.error('Send OTP error:', err);
-      handleError('Network error. Could not send OTP.');
+    );
+
+    const data = response.data;
+
+    if (data.success) {
+      handleSuccess(data.message || 'OTP sent to your email.');
+      setOtpSent(true);
+    } else {
+      handleError(data.message || 'Failed to send OTP.');
     }
-  };
+  } catch (err) {
+    console.error('Send OTP error:', err);
+    handleError(err.response?.data?.message || 'Network error. Could not send OTP.');
+  }
+};
 
   const handleVerifyOtp = async () => {
-    if (!token) {
-      handleError('Token not found. Please login again.');
-      return;
-    }
+    
 
     if (otp.length !== 6) {
       handleError('Please enter a complete 6-digit OTP.');
@@ -68,11 +64,10 @@ function VerifyEmail() {
     }
 
     try {
-      const result = await dispatch(verifyEmail({ otp, token }));
+      const result = await dispatch(verifyEmail({ otp }));
 
       if (verifyEmail.fulfilled.match(result)) {
         handleSuccess(result.payload.message || 'Email verified successfully!');
-        // localStorage.removeItem('token'); // Optional: logout after verify
         navigate('/');
       } else {
         handleError(result.payload || 'Invalid OTP. Please try again.');
@@ -84,10 +79,7 @@ function VerifyEmail() {
   };
 
   const handleResendOtp = async () => {
-    if (!token) {
-      handleError('Token not found. Please login again.');
-      return;
-    }
+     
 
     try {
       const response = await fetch('http://localhost:5000/api/auth/resend-otp', {

@@ -8,9 +8,11 @@ import { getUserProfile, setInitialAuthCheckComplete } from "./features/auth/aut
 import { ToastContainer } from "react-toastify"; // For toast notifications
 import "react-toastify/dist/ReactToastify.css"; // Styles for react-toastify
 
+ 
 function App() {
     const dispatch = useDispatch();
     const { initialAuthCheckComplete, loading } = useSelector((state) => state.auth);
+    const currentTheme = useSelector((state) => state.theme.theme);
 
     useEffect(() => {
         // This effect runs only once when the App component mounts
@@ -22,6 +24,15 @@ function App() {
         }
     }, [dispatch, initialAuthCheckComplete]); // Dependencies for the effect
 
+
+     useEffect(() => {
+    // Apply the theme class to the HTML element when the component mounts or theme changes
+    if (currentTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [currentTheme]);
     // Render a loading state until the initial authentication check is complete
     // if (!initialAuthCheckComplete || loading) {
     //     return (
@@ -34,6 +45,7 @@ function App() {
     // Render the main application content once the auth check is complete
     return (
         <Router>
+             {/* <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300"> */}
             <AppRoutes />
             {/* ToastContainer for global notifications */}
             <ToastContainer
@@ -47,6 +59,7 @@ function App() {
                 draggable
                 pauseOnHover
             />
+             {/* </div> */}
         </Router>
     );
 }

@@ -1,37 +1,37 @@
-import axios from '../../services/axiosInstance';
+import axiosInstance from '../../services/axiosInstance';
 
 export const loginUserAPI = async (data) => {
-  const res = await axios.post('/login', data);
-  console.log("Login API Response:", res.data);
+  const res = await axiosInstance.post('auth/login', data, { withCredentials: true, });
   return res.data;
 };
 
 export const signupUserAPI = async (data) => {
-  const res = await axios.post('/signup', data);
+  const res = await axiosInstance.post('auth/signup', data);
   return res.data;
 };
 
 export const verifyEmailOtpAPI = async (data) => {
-  const res = await axios.post('/send-verify-otp', data);
+  const res = await axiosInstance.post('auth/send-verify-otp', data, { withCredentials: true, });
+  return res.data;
+};
+export const logoutAPI = async () => {
+  const res = await axiosInstance.post('auth/logout',{},{
+    withCredentials:true,
+  });
   return res.data;
 };
 
 
-export const verifyEmailAPI = async ({ otp, token }) => {
-  const res = await axios.post(
-    'http://localhost:5000/api/auth/verify-account',
-    { otp },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+export const verifyEmailAPI = async ({ otp }) => {
+  const res = await axiosInstance.post('auth/verify-account',{ otp },{
+      withCredentials: true, // ✅ Use the cookie automatically
     }
   );
-  return res; // keep `.data` access in the thunk
+  return res;
 };
+
 export const resetPasswordAPI = async (data) => {
-  const res = await axios.post('/reset-password', data);
+  const res = await axiosInstance.post('auth/reset-password', data);
   return res.data;
 };
 

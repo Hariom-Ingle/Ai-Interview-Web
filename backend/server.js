@@ -21,8 +21,13 @@ const app = express();
 // Middleware to parse JSON
 app.use(express.json());
 // 👇 Middleware to parse cookies
-app.use(cookieParser());
-app.use(cors());
+app.use(cookieParser()); 
+app.use(cors({
+  origin: 'http://localhost:5173', // Your frontend origin
+  credentials: true,              // ⬅️ Required for cookies
+}));
+
+
 // Routes
 app.use('/api/auth', authRoutes);
 // app.use('/api/user', userRoutes);

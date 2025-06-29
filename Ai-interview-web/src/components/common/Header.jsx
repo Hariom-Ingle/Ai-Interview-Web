@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { logoutUser } from "@/features/auth/authSlice";
 import { toggleTheme } from "@/features/theme/themeSlice";  
 import { handleError, handleSuccess } from "@/utils";
-import { ArrowRight, Menu, Moon, Sun, X } from "lucide-react";  
+import { ArrowRight, LogIn, Menu, Moon, Sun, UserPlus, X } from "lucide-react";  
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -48,20 +48,21 @@ function Header() {
 
     const navLinks = [
         { name: "Dashboard", path: "/dashboard", protected: true },
-        { name: "Interview", path: "/interbviewerdashboard", protected: true },
         { name: "About", path: "/about" },
         { name: "Upgrade", path: "/upgrade", protected: true },
         { name: "How it Works", path: "/howitwork" },
     ];
 
-    const userInitial = user && user.name ? user.name.charAt(0).toUpperCase() : 'U';
-    const userNameDisplay = user && user.name ? `Hi ${user.name.split(' ')[0]}` : 'Hi User';
+     
+    const userInitial = user && user.name ? user.name.trim().charAt(0).toUpperCase() : 'U';
+    
+    const userNameDisplay = user && user.name ? `Hi ${user.name.trim().split(' ')[0]}` : 'Hi User';
     const isUserVerified = user && user.isAccountVerified;
 
     // Determine header background based on theme
     const headerClasses = `
         px-4 py-3 sticky top-0 z-50 transition-colors duration-300
-        ${currentTheme === 'dark' ? 'bg-gray-800 shadow-lg' : 'bg-white shadow-md'}
+        ${currentTheme === 'dark' ? 'dark-background shadow-lg' : 'bg-white shadow-md'}
     `;
 
     // Determine text color based on theme for NavLinks etc.
@@ -73,8 +74,8 @@ function Header() {
         <header className={headerClasses}>
             <div className="max-w-7xl mx-auto flex items-center justify-between">
                 {/* Logo */}
-                <div className="text-xl font-bold text-blue-600">
-                    <NavLink to="/">PrepAi</NavLink>
+                <div className="text-2xl font-bold text-blue-900 dark:text-blue-300">
+                    <NavLink to="/">Prep<span className="text-blue-600 text-xl  ">Ai</span> </NavLink>
                 </div>
 
                 {/* Nav links (Desktop) */}
@@ -147,13 +148,13 @@ function Header() {
                     ) : (
                         <>
                             <NavLink to="/login">
-                                <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-300 dark:text-blue-300 dark:hover:bg-gray-700">
-                                    Login
+                                <Button variant="none" className="border-blue-600 text-md text-black hover:bg-blue-50 dark:border-blue-300 dark:text-blue-300 dark:hover:bg-gray-700 align-middle">
+                                  <LogIn className="text-black "/>  Login
                                 </Button>
                             </NavLink>
                             <NavLink to="/register">
                                 <Button className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800">
-                                    Sign Up
+                                   <UserPlus /> Sign Up
                                 </Button>
                             </NavLink>
                         </>

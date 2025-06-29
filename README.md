@@ -1,6 +1,6 @@
  #  PrepAI: Your AI-Powered Interview Preparation Platform
 
-![Project Banner Image](/Ai-interview-web/images/Untitled%20design.gif "Optional: A nice banner for your project")
+![Project Banner Image](/Demo/Demo.gif "Optional: A nice banner for your project")
 
 ## Table of Contents
 
@@ -59,6 +59,10 @@ This project leverages a modern full-stack JavaScript ecosystem.
 * **Redux Toolkit:** For efficient and predictable state management.
 * **React Router DOM:** For declarative routing in the application.
 * **Axios:** A promise-based HTTP client for making API requests.
+
+* **Audio-to-Text Integration:** Enables the conversion of spoken language into written text, likely for processing user voice input during interviews.
+
+* **Text-to-Speech Integration:** Facilitates the conversion of written text into spoken words, potentially used for AI responses or interview prompts.
 * **React Toastify:** For elegant and customizable notifications.
 * **Shadcn/UI:** A collection of reusable components built with Radix UI and Tailwind CSS.
 * **Tailwind CSS:** A utility-first CSS framework for rapidly building custom designs.

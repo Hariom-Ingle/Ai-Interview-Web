@@ -45,8 +45,8 @@ function App() {
     // Render the main application content once the auth check is complete
     return (
         <Router>
-             {/* <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300"> */}
-            <AppRoutes />
+       <div className="min-h-scree bg-gradient-to-br from-[#eef4ff] via-white to-[#dbeafe] dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+             <AppRoutes />
             {/* ToastContainer for global notifications */}
             <ToastContainer
                 position="bottom-right"
@@ -59,7 +59,7 @@ function App() {
                 draggable
                 pauseOnHover
             />
-             {/* </div> */}
+             </div>
         </Router>
     );
 }

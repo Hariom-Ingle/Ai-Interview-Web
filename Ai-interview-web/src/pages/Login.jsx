@@ -53,7 +53,7 @@ export default function Login() {
 
   return (
     // Outer container: Overall background and default text color
-    <div className="min-h-screen flex items-center justify-center bg-blue-50 dark:bg-gray-950 px-4 transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-blue-50 dark:bg-dark-background px-4 transition-colors duration-300">
       <form
         onSubmit={handleSubmit}
         className="
@@ -163,7 +163,7 @@ export default function Login() {
         {/* Signup Link */}
         <p className="text-sm text-center text-blue-600 dark:text-gray-300">
           Don’t have an account?{' '}
-          <Link to="/sign-up" className="text-blue-800 dark:text-blue-400 font-medium hover:underline">
+          <Link to="/register" className="text-blue-800 dark:text-blue-400 font-medium hover:underline">
             Sign up here
           </Link>
         </p>

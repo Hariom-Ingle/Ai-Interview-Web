@@ -78,20 +78,23 @@ export default function PracticePrerequisiteDialog({ open, onOpenChange, onStart
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-5xl bg-white p-6 rounded-xl border border-blue-100 shadow-md">
+      <DialogContent className="w-full max-w-5xl bg-white p-6 rounded-xl border border-blue-100 shadow-md
+                                dark:bg-gray-900 dark:border-gray-700 dark:shadow-lg dark:shadow-blue-950">
         <DialogHeader className="flex justify-between items-center mb-4">
-          <DialogTitle className="text-blue-800 text-2xl font-semibold">Practice Prerequisite</DialogTitle>
-          {/* EVALUATION CRITERIA button - kept as is */}
-          <Button variant="outline" className="text-blue-700 border-blue-300 hover:bg-blue-50 text-sm px-4 py-2 rounded-lg flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-blue-500 block" />
+          <DialogTitle className="text-blue-800 text-2xl font-semibold dark:text-blue-300">Practice Prerequisite</DialogTitle>
+          {/* EVALUATION CRITERIA button */}
+          <Button variant="outline" className="text-blue-700 border-blue-300 hover:bg-blue-50 text-sm px-4 py-2 rounded-lg flex items-center gap-2
+                                              dark:text-blue-300 dark:border-blue-600 dark:hover:bg-blue-900 dark:hover:text-blue-200">
+            <span className="w-2 h-2 rounded-full bg-blue-500 block" /> {/* This color is fine for dark mode */}
             EVALUATION CRITERIA
           </Button>
         </DialogHeader>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
           {/* Compatibility Check Section */}
-          <div className="bg-blue-50 p-5 rounded-lg border border-blue-100 shadow-sm">
-            <h3 className="text-blue-800 text-lg font-semibold mb-4">Compatibility Test</h3>
+          <div className="bg-blue-50 p-5 rounded-lg border border-blue-100 shadow-sm
+                          dark:bg-gray-800 dark:border-gray-700 dark:shadow-none">
+            <h3 className="text-blue-800 text-lg font-semibold mb-4 dark:text-blue-300">Compatibility Test</h3>
             <div className="relative w-full h-48 bg-gray-900 rounded-md flex items-center justify-center mb-4 overflow-hidden">
               {cameraStatus === null ? (
                 <div className="text-white text-lg flex flex-col items-center">
@@ -106,17 +109,17 @@ export default function PracticePrerequisiteDialog({ open, onOpenChange, onStart
                   className="w-full h-full object-cover transform scaleX(-1)" // Added transform for selfie view
                 />
               ) : (
-                <span className="text-5xl text-white">🚫🎥</span> // Emoji for no camera
+                <span className="text-5xl text-white">🚫🎥</span> 
               )}
             </div>
-            <ul className="space-y-2 text-blue-700">
+            <ul className="space-y-2 text-blue-700 dark:text-gray-300">
               <li className="flex items-center gap-2">
                 {cameraStatus === true ? (
                   <CheckCircle2 className="text-green-500" />
                 ) : cameraStatus === false ? (
                   <XCircle className="text-red-500" />
                 ) : (
-                  <AlertCircle className="text-yellow-500" /> // Icon for checking
+                  <AlertCircle className="text-yellow-500" /> 
                 )}
                 {cameraStatus === true ? 'Camera is enabled.' : cameraStatus === false ? 'Camera not accessible.' : 'Checking camera...'}
               </li>
@@ -126,34 +129,37 @@ export default function PracticePrerequisiteDialog({ open, onOpenChange, onStart
                 ) : micStatus === false ? (
                   <XCircle className="text-red-500" />
                 ) : (
-                  <AlertCircle className="text-yellow-500" /> // Icon for checking
+                  <AlertCircle className="text-yellow-500" /> 
                 )}
                 {micStatus === true ? 'Microphone is enabled.' : micStatus === false ? 'Microphone not accessible.' : 'Checking microphone...'}
               </li>
             </ul>
             {permissionError && (
-              <p className="text-red-600 text-sm mt-3 flex items-center gap-2">
+              <p className="text-red-600 text-sm mt-3 flex items-center gap-2 dark:text-red-400">
                 <AlertCircle className="h-4 w-4" /> {permissionError}
               </p>
             )}
             <Button
               onClick={checkPermissions}
-              className="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md"
+              className="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md
+                         dark:bg-blue-700 dark:hover:bg-blue-800"
             >
               RECHECK DEVICES
             </Button>
           </div>
 
           {/* Instructions Section */}
-          <div className="bg-blue-50 p-5 rounded-lg border border-blue-100 shadow-sm">
-            <h3 className="text-blue-800 text-lg font-semibold mb-4">Interview Practice Instructions</h3>
-            <div className="relative w-full h-48 bg-blue-100 rounded-md flex items-center justify-center mb-4">
+          <div className="bg-blue-50 p-5 rounded-lg border border-blue-100 shadow-sm
+                          dark:bg-gray-800 dark:border-gray-700 dark:shadow-none">
+            <h3 className="text-blue-800 text-lg font-semibold mb-4 dark:text-blue-300">Interview Practice Instructions</h3>
+            <div className="relative w-full h-48 bg-blue-100 rounded-md flex items-center justify-center mb-4
+                            dark:bg-gray-700"> {/* Dark background for instruction preview */}
               <span className="text-5xl">👨‍💼</span>
               <Button className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full text-sm">
-                ▶ START ANSWER
+                ▶ START ANSWER {/* These colors are universally fine */}
               </Button>
             </div>
-            <ol className=" list-inside text-blue-700 text-sm space-y-2">
+            <ol className=" list-inside text-blue-700 text-sm space-y-2 dark:text-gray-300">
               <li> <strong>1.</strong> Click on 'Start Recording' to begin speaking your answer. Click 'Stop Recording' when finished.</li>
               <li><strong>2.</strong> You can choose to 'Type Answer' if you prefer not to use your voice.</li>
               <li><strong>3.</strong> After submitting your answer, click 'Next Question' to proceed.</li>
@@ -166,7 +172,8 @@ export default function PracticePrerequisiteDialog({ open, onOpenChange, onStart
         {/* Bottom Buttons */}
         <div className="flex justify-center gap-4 mt-8 flex-wrap">
           <Button
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-sm"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-sm
+                       dark:bg-blue-700 dark:hover:bg-blue-800"
             onClick={onStartPractice}
             disabled={!canStartPractice} // Disable if camera/mic not ready
           >
@@ -174,7 +181,8 @@ export default function PracticePrerequisiteDialog({ open, onOpenChange, onStart
           </Button>
           <Button
             variant="ghost"
-            className="text-blue-700 hover:bg-blue-100 px-6 py-3 rounded-lg"
+            className="text-blue-700 hover:bg-blue-100 px-6 py-3 rounded-lg
+                       dark:text-blue-300 dark:hover:bg-blue-900"
             onClick={() => {
               if (onGoBack) onGoBack(); // callback to parent if needed
               onOpenChange(false);      // properly closes the dialog

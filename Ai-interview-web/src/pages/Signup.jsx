@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signupUser } from '@/features/auth/authSlice';
 import { handleError, handleSuccess } from '@/utils';
+
+// Import 'react-toastify' styles if not already in your global CSS
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,7 +21,7 @@ export default function Signup() {
     password: '',
   });
 
-  const { loading, error, user } = useSelector((state) => state.auth);
+  const { loading } = useSelector((state) => state.auth); // Destructure loading from auth state
 
   const handleOnchange = (e) => {
     const { name, value } = e.target;
@@ -33,34 +36,40 @@ export default function Signup() {
       return handleError('Name, email, and password are required');
     }
 
+    // Dispatch the signupUser thunk and handle the promise
     dispatch(signupUser(signupInfo))
-      .unwrap()
+      .unwrap() // unwraps the fulfilled value or throws the rejected value
       .then((res) => {
         handleSuccess(res.message || 'Signup successful');
-        setSignupInfo({ name: '', email: '', password: '' });
-        setTimeout(() => navigate('/verify-email'), 1500);
+        setSignupInfo({ name: '', email: '', password: '' }); // Clear form on success
+        setTimeout(() => navigate('/login'), 1500); // Redirect after a short delay
       })
       .catch((errMsg) => {
-        handleError(errMsg);
+        handleError(errMsg || 'Signup failed. Please try again.'); // Catch and display error message
       });
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-50 px-4">
+    // Main container: Applies the deep navy background in dark mode
+    <div className="min-h-screen flex items-center justify-center bg-blue-50 dark:bg-[#000336] px-4 transition-colors duration-300">
       <form
-        className="bg-white border border-blue-100 shadow-md rounded-xl p-8 w-full max-w-md space-y-6"
+        className="bg-white dark:bg-gray-900 border border-blue-100 dark:border-gray-700 shadow-md dark:shadow-lg dark:shadow-blue-950 rounded-xl p-8 w-full max-w-md space-y-6"
         onSubmit={handleSubmit}
       >
-        <h2 className="text-2xl font-semibold text-center text-blue-800">Sign Up</h2>
-        <p className="text-sm text-center text-blue-600">Create your account to get started</p>
+        <h2 className="text-2xl font-semibold text-center text-blue-800 dark:text-blue-300">
+          Sign Up
+        </h2>
+        <p className="text-sm text-center text-blue-600 dark:text-gray-400">
+          Create your account to get started
+        </p>
 
         {/* Name Field */}
         <div>
-          <label htmlFor="name" className="block mb-2 text-sm font-medium text-blue-800">
+          <label htmlFor="name" className="block mb-2 text-sm font-medium text-blue-800 dark:text-gray-200">
             Full Name
           </label>
           <div className="relative">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-400">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-400 dark:text-gray-400">
               <User className="w-5 h-5" />
             </span>
             <input
@@ -69,20 +78,23 @@ export default function Signup() {
               onChange={handleOnchange}
               name="name"
               value={signupInfo.name}
-              placeholder="John Doe"
+              placeholder=""
               autoFocus
-              className="pl-10 pr-3 py-2 w-full border border-blue-200 rounded-lg text-blue-900 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none bg-white"
+              className="pl-10 pr-3 py-2 w-full border border-blue-200 rounded-lg
+                         text-blue-900 dark:text-gray-100 text-sm
+                         focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500
+                         focus:outline-none bg-white dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
             />
           </div>
         </div>
 
         {/* Email Field */}
         <div>
-          <label htmlFor="email" className="block mb-2 text-sm font-medium text-blue-800">
+          <label htmlFor="email" className="block mb-2 text-sm font-medium text-blue-800 dark:text-gray-200">
             Email Address
           </label>
           <div className="relative">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-400">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-400 dark:text-gray-400">
               <Mail className="w-5 h-5" />
             </span>
             <input
@@ -91,19 +103,22 @@ export default function Signup() {
               onChange={handleOnchange}
               name="email"
               value={signupInfo.email}
-              placeholder="you@example.com"
-              className="pl-10 pr-3 py-2 w-full border border-blue-200 rounded-lg text-blue-900 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none bg-white"
+              placeholder=""
+              className="pl-10 pr-3 py-2 w-full border border-blue-200 rounded-lg
+                         text-blue-900 dark:text-gray-100 text-sm
+                         focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500
+                         focus:outline-none bg-white dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
             />
           </div>
         </div>
 
         {/* Password Field */}
         <div>
-          <label htmlFor="password" className="block mb-2 text-sm font-medium text-blue-800">
+          <label htmlFor="password" className="block mb-2 text-sm font-medium text-blue-800 dark:text-gray-200">
             Password
           </label>
           <div className="relative">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-400">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-400 dark:text-gray-400">
               <Lock className="w-5 h-5" />
             </span>
             <input
@@ -112,13 +127,16 @@ export default function Signup() {
               onChange={handleOnchange}
               name="password"
               value={signupInfo.password}
-              placeholder="••••••••"
-              className="pl-10 pr-10 py-2 w-full border border-blue-200 rounded-lg text-blue-900 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none bg-white"
+              placeholder=" "
+              className="pl-10 pr-10 py-2 w-full border border-blue-200 rounded-lg
+                         text-blue-900 dark:text-gray-100 text-sm
+                         focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500
+                         focus:outline-none bg-white dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-400"
+              className="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-400 dark:text-gray-400"
             >
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
@@ -130,17 +148,19 @@ export default function Signup() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition duration-200 ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition duration-200
+                       dark:bg-blue-700 dark:hover:bg-blue-800
+                       ${loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
           >
             {loading ? 'Creating...' : 'Create Account'}
           </button>
         </div>
 
-        <p className="text-sm text-center cursor-pointer text-blue-600">
+        {/* Login Link */}
+        <p className="text-sm text-center cursor-pointer text-blue-600 dark:text-gray-400">
           Already have an account?{' '}
-          <Link to="/sign-in" className="text-blue-800 font-medium hover:underline">
+          <Link to="/login" className="text-blue-800 dark:text-blue-400 font-medium hover:underline">
             Login here
           </Link>
         </p>

@@ -18,8 +18,7 @@ import VerifyEmail from "@/pages/VerifyEmail";
 import Header from "../components/common/Header";
 import Upgrade from "../pages/Upgrade";
 import ResetPassword from "@/pages/ResetPassword"; // Ensure this is imported
-import InterviewerDashboard from "@/pages/InterviewMeeting/InterviewerDashboard";
-
+ 
 // --- ProtectedRoute Component ---
 // This component wraps routes that require authentication.
 const ProtectedRoute = ({ children }) => {
@@ -43,7 +42,6 @@ function AppRoutes() {
             <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<HomePage />} />
-                <Route path="/interbviewerdashboard" element={<InterviewerDashboard />} /> {/* Renamed from /sign-in for consistency */}
                 <Route path="/login" element={<Login />} /> {/* Renamed from /sign-in for consistency */}
                 <Route path="/register" element={<Signup />} /> {/* Renamed from /sign-up for clarity */}
                 <Route path="/forgot-password" element={<ResetPassword />} />

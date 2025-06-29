@@ -13,8 +13,7 @@ const protect = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
     }
 
-    console.log('Cookies:', req.cookies);
-console.log('Authorization header:', req.headers.authorization);
+ 
     // 2. If not in header, extract from cookies
     if (!token && req.cookies && req.cookies.jwt) {
       token = req.cookies.jwt;
@@ -26,7 +25,7 @@ console.log('Authorization header:', req.headers.authorization);
 
     // 3. Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Decoded ID:", decoded.id);
+ 
 
     // 4. Attach user data
     req.userId = decoded.id;

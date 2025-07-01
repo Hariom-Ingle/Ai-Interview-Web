@@ -1,6 +1,6 @@
  #  PrepAI: Your AI-Powered Interview Preparation Platform
 
-![Project Banner Image](/Demo/Demo.gif "Optional: A nice banner for your project")
+![Project Demo](/Demo/Demo.gif "Optional: A nice banner for your project")
 
 ## Table of Contents
 
@@ -83,7 +83,8 @@ This project leverages a modern full-stack JavaScript ecosystem.
 ---
 ## Work Flow 
 
-![workflow dig](<_- visual selection (1).png>)
+ ![Work Flow Diagram](/Demo/_-%20visual%20selection%20(1).png "")
+
 
 ---
 

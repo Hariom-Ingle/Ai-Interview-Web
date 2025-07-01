@@ -7,6 +7,7 @@
 -   [About the Project](#about-the-project)
     -   [Features](#features)
 -   [Technologies Used](#technologies-used)
+-   [Work Flow ](#work-flow)
 -   [Getting Started](#getting-started)
     -   [Prerequisites](#prerequisites)
     -   [Installation](#installation)
@@ -78,6 +79,11 @@ This project leverages a modern full-stack JavaScript ecosystem.
 * **Bcrypt.js:** For password hashing.
 * **Nodemailer:** For sending emails (e.g., OTP for verification, password reset links).
  
+
+---
+## Work Flow 
+
+![workflow dig](<_- visual selection (1).png>)
 
 ---
 

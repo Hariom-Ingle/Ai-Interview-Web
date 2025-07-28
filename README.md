@@ -1,5 +1,9 @@
  #  PrepAI: Your AI-Powered Interview Preparation Platform
 
+ ## 📽️ Demo
+
+Watch the live demo here: [Click to Watch](https://youtu.be/ZABUpUduTb8)
+
 ![Project Demo](/Demo/Demo.gif "Optional: A nice banner for your project")
 
 ## Table of Contents
